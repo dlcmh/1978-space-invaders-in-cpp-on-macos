@@ -11,6 +11,9 @@ dist/
 # Generated icon intermediates
 Resources/AppIcon.iconset/
 
+# Editor/tooling caches (clangd index)
+.cache/
+
 # Python tooling
 __pycache__/
 *.py[cod]
