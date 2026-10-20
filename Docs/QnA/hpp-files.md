@@ -6,6 +6,9 @@ against a type without seeing how it works. The extension is a convention, not a
 language rule — `.hpp` marks the file as C++ and pairs with the `.cpp` that
 supplies the definitions.
 
+For the bigger picture — why headers exist, and how `.hpp`/`.cpp` and `.h`/`.mm`
+pairs divide their work — see [Why do headers exist?](headers-and-source-pairs.md).
+
 ## The preprocessor copies, it does not link
 
 `Bunker.cpp` opens with `#include "invaders/Bunker.hpp"`, and
