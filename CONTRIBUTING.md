@@ -43,9 +43,10 @@ make check
 ```
 
 That runs the full gate: `clang-format --dry-run --Werror`, a Release build
-with warnings as errors, the simulation checks, and the documentation checks.
-Run it before every commit. The individual stages are also available (`make
-checks`, `make docs-check`, `make format`).
+with warnings as errors (which also compiles each portable header on its own),
+the simulation checks, and the documentation checks. Run it before every
+commit. The individual stages are also available (`make checks`,
+`make docs-check`, `make format`).
 
 The simulation checks are a dependency-free executable, not a framework test
 suite. Add checks whenever you touch movement, collision, scoring, phase

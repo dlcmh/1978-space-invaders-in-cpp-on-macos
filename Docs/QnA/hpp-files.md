@@ -73,6 +73,11 @@ render target instead exposes its own directory, which is why
 `Sources/Render/Scene.cpp` can use `#include "Scene.hpp"`. Both forms resolve
 through the same mechanism: the compiler is told which directories to search.
 
+Each portable header is also compiled as its own translation unit by
+[`HeaderChecks.cmake`](../../cmake/HeaderChecks.cmake) —
+`space_invaders_add_header_checks`, so a missing direct include cannot hide
+behind a transitive one.
+
 Headers hold more than declarations. [`MetalShaders.hpp`](../../Sources/Render/MetalShaders.hpp)
 — `kMetalShaderSource` is the entire Metal Shading Language program stored as a
 string, because it is compiled at runtime and must ship inside the binary.

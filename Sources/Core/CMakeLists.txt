@@ -21,3 +21,14 @@ set_target_properties(
         CXX_STANDARD_REQUIRED YES
         CXX_EXTENSIONS NO
 )
+
+space_invaders_add_header_checks(
+    spaceinvaders_core_header_checks
+    HEADERS
+        invaders/Types.hpp
+        invaders/Rng.hpp
+        invaders/Bunker.hpp
+        invaders/Game.hpp
+    INCLUDE_DIRS
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+)

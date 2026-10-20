@@ -156,6 +156,8 @@ documentation validator. Sources are built as separate targets:
 
 - `spaceinvaders_core` — no Apple framework dependencies;
 - `spaceinvaders_render` — C++ scene composition;
+- `spaceinvaders_core_header_checks` and `spaceinvaders_render_header_checks` —
+  each portable header compiled as its own translation unit;
 - `spaceinvaders_app` — Objective-C++ bridge and AppKit application; and
 - `spaceinvaders_checks` — the headless executable.
 
@@ -252,7 +254,9 @@ are reproducible from the seed and input schedule in the test.
 - Mark getters `[[nodiscard]]` and operations that cannot throw `noexcept`.
 - Use `std::size_t` loops for containers and explicit casts for numeric
   conversions; the warning set rejects silent narrowing.
-- Keep headers self-contained and include what you use.
+- Keep headers self-contained and include what you use; the build compiles each
+  portable header as its own translation unit so a missing include cannot hide
+  behind a transitive one.
 - Keep Objective-C++ in `.mm`; keep `.cpp` files free of Apple imports.
 - Add a check when behaviour changes; update a citing document when a symbol
   changes.

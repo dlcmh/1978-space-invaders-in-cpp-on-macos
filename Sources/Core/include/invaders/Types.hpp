@@ -1,14 +1,6 @@
 #pragma once
 
-#include <algorithm>
-#include <array>
-#include <cmath>
-#include <cstddef>
 #include <cstdint>
-#include <optional>
-#include <span>
-#include <string_view>
-#include <vector>
 
 namespace invaders {
 

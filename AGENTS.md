@@ -34,6 +34,7 @@ supersedes them. Update this file when project policy changes.
 | `Resources/` | `Info.plist` and the generated `.icns`/`.png` app icon. |
 | `Docs/` | Screenshots, origin record, architecture, Q&A, and refactoring records. |
 | `scripts/` | App-bundle packaging, icon generation, source formatting, docs checking, and the `make check` gate. |
+| `cmake/` | CMake modules, including the standalone header-compile check. |
 | `build/`, `dist/` | Generated and git-ignored. Never commit either directory. |
 
 ## Prerequisites
@@ -134,7 +135,8 @@ gameplay additions with the maintainer first.
 gate every change must pass:
 
 1. `clang-format --dry-run --Werror` over `Sources/` and `Checks/`;
-2. a Release build with `-Werror` and the project warning set;
+2. a Release build with `-Werror` and the project warning set, which also
+   compiles each portable header as a standalone translation unit;
 3. `spaceinvaders_checks` — behavior; and
 4. `python3 scripts/check_docs.py` — documentation integrity.
 

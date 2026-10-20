@@ -20,3 +20,15 @@ set_target_properties(
         CXX_STANDARD_REQUIRED YES
         CXX_EXTENSIONS NO
 )
+
+space_invaders_add_header_checks(
+    spaceinvaders_render_header_checks
+    HEADERS
+        Canvas.hpp
+        PixelFont.hpp
+        Scene.hpp
+        MetalShaders.hpp
+    INCLUDE_DIRS
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        ${CMAKE_SOURCE_DIR}/Sources/Core/include
+)

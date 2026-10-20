@@ -51,6 +51,8 @@ target_compile_options(
         $<$<COMPILE_LANGUAGE:OBJCXX>:-Wno-direct-ivar-access>
 )
 
+include(cmake/HeaderChecks.cmake)
+
 add_subdirectory(Sources/Core)
 add_subdirectory(Sources/Render)
 
