@@ -8,6 +8,7 @@ Newest first:
 
 | Question | Updated |
 | --- | --- |
+| [What is a `.hpp` file?](hpp-files.md) | 2026-10-20 |
 | [Why is a SplitMix64 implementation needed?](splitmix64.md) | 2026-10-20 |
 | [How do the C++ core and Metal presentation fit together?](core-and-metal.md) | 2026-10-20 |
 | [Why does the alien march speed up as they are destroyed?](alien-march.md) | 2026-10-20 |
