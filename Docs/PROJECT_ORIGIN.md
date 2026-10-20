@@ -9,6 +9,7 @@ governance document. The **Original request** block below is immutable.
 - **Commissioned by:** David Chin ([@dlcmh](https://github.com/dlcmh))
 - **Commissioned:** 2026-10-20 18:50:39 (+08:00, Asia/Kuala_Lumpur)
 - **Delivery agent:** DeepSeek Harness (deepseek-flash)
+- **Initial implementation commit:** `abfe42e`
 - **Initial public version:** 1.0
 
 ## Original request
@@ -125,7 +126,10 @@ simulation suite passed **24,343 checks**, covering:
 
 Visual verification used window captures of the running app, recorded in
 `Docs/`: title screen (procedural logo, point table, controls) and
-gameplay (formation, carved bunkers, enemy fire, player cannon, HUD).
+gameplay (formation, carved bunkers, enemy fire, player cannon, HUD). The
+Release build was packaged as `dist/SPACE-INVADERS.app` and
+`dist/SPACE-INVADERS-1.0.dmg`; the bundle was launched directly and its window
+was captured to confirm it renders. Generated artifacts remain git-ignored.
 
 Audio synthesis starts through the Core Audio output unit; the engine also
 fails closed to silent play if no output device is available. The repository's
