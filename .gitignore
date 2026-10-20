@@ -1,0 +1,21 @@
+# macOS
+.DS_Store
+
+# CMake/Ninja build products
+build/
+CMakeUserPresets.json
+
+# Generated release artifacts
+dist/
+
+# Generated icon intermediates
+Resources/AppIcon.iconset/
+
+# Python tooling
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.venv/
+venv/
