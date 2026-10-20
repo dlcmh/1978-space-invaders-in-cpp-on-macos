@@ -57,6 +57,51 @@ mixes well from a counter, which is exactly the profile needed for a few dozen
 draws per wave. It is not cryptographic and does not need to be: nothing here
 protects a secret, and predictability is a feature because it enables replay.
 
+## Where the name comes from
+
+The name is a three-part description of the algorithm, published by Guy L.
+Steele Jr., Doug Lea, and Christine H. Flood in
+[Fast Splittable Pseudorandom Number Generators](https://doi.org/10.1145/2660193.2660195)
+(OOPSLA 2014):
+
+- **Split** — the generator is *splittable*. An existing instance can mint a new
+  independent instance (a new seed and a new increment) without touching global
+  state. That was the point of the paper: fork/join tasks need their own streams,
+  and Java 8 shipped the design as `java.util.SplittableRandom` for parallel
+  streams.
+- **Mix** — each output is a counter value pushed through a bijective bit-mixing
+  function, rather than the raw state. SplitMix's state transition is only a
+  Weyl sequence (repeated addition of an odd constant), so the mixing step is
+  what makes the output look random.
+- **64** — the concrete instantiation uses one 64-bit word of state and returns
+  64 bits.
+
+The paper derives SplitMix from DOTMIX (Leiserson, Schardl, and Sukha's
+deterministic parallel RNG), and the name reads as the successor: DOTMIX's dot
+products and coefficient tables are gone, replaced by splitting and mixing.
+
+The pieces inside `next` are older than the name:
+
+- the added constant `0x9E37'79B9'7F4A'7C15` is the golden-ratio increment,
+  `floor(2⁶⁴ / φ)` — a Weyl sequence chosen so that successive states are
+  equidistributed; the paper calls it gamma and defaults to it;
+- the two multiply/xor rounds are David Stafford's *Mix13*, the thirteenth of the
+  candidate finalizers in
+  [Better Bit Mixing](http://zimbry.blogspot.com/2011/09/better-bit-mixing-improving-on.html)
+  (2011), which the paper cites as `mix64variant13`. The project's `SplitMix64`
+  uses Mix13 directly as the output mixer, the form that spread through C, Rust,
+  and Haskell libraries and into the xoshiro family as a seeding function.
+
+A footnote worth knowing: the `mixGamma` code printed in the paper contained an
+inverted test, which M. E. O'Neill documented in
+[Bugs in SplitMix(es)](https://www.pcg-random.org/posts/bugs-in-splitmix.html)
+(2017); Java's implementation was written earlier and was correct. This project
+never hits the issue, because `SplitMix64` implements no splitting and no gamma
+repair: it always runs the one golden increment.
+
+The default seed here, `0x1978'5ACE'CAFE'BEEF`, is this project's own joke —
+1978, SPACE, and a well-known filler word — not part of the published algorithm.
+
 ## The renderer has its own copy
 
 [Scene.cpp](../../Sources/Render/Scene.cpp) — `Scene::Scene` seeds an
