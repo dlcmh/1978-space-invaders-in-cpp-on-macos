@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 680" width="1120" height="680" role="img" aria-labelledby="title desc">
+  <title id="title">SPACE INVADERS — Metal Arcade: layered architecture</title>
+  <desc id="desc">Three layers. Sources/App and Sources/Platform on top, Sources/Render in the middle, Sources/Core at the bottom. Read-only state and events flow upward; commands travel down the right-hand channel into the core.</desc>
+
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="0%" r="95%">
+      <stop offset="0%" stop-color="#0A1620"/>
+      <stop offset="55%" stop-color="#05090E"/>
+      <stop offset="100%" stop-color="#030509"/>
+    </radialGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#101A22"/>
+      <stop offset="100%" stop-color="#0A1218"/>
+    </linearGradient>
+    <marker id="arrow-mint" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#59E0B6"/>
+    </marker>
+    <marker id="arrow-magenta" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#FF6FA5"/>
+    </marker>
+    <style>
+      .bg     { fill: url(#bg); }
+      .star   { fill: #9BE9D2; }
+      .panel  { fill: url(#panel); stroke: #23413A; stroke-width: 1.5; }
+      .accent { fill: #2E5E50; }
+      .layer  { font-family: "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+                font-size: 21px; font-weight: 600; fill: #8DF5CB; letter-spacing: 0.4px; }
+      .what   { font-family: "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+                font-size: 14px; fill: #8FA6AE; }
+      .members { font-family: "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+                font-size: 15px; fill: #BAD9CC; }
+      .flow   { stroke: #59E0B6; stroke-width: 2; fill: none; }
+      .flowLabel { font-family: "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+                font-size: 15px; font-weight: 600; fill: #9BE9D2; }
+      .flowNote { font-family: "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+                font-size: 12.5px; fill: #6F8A8F; }
+      .cmd    { stroke: #FF6FA5; stroke-width: 2; fill: none; }
+      .cmdLabel { font-family: "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+                font-size: 15px; font-weight: 600; fill: #FF9CC0; }
+      .cmdNote { font-family: "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+                font-size: 12.5px; fill: #B98A9B; }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1120" height="680"/>
+
+  <!-- faint star field -->
+  <g class="star" opacity="0.35">
+    <circle cx="96" cy="48" r="1.1"/>
+    <circle cx="215" cy="30" r="0.8"/>
+    <circle cx="352" cy="70" r="1.3"/>
+    <circle cx="488" cy="34" r="0.9"/>
+    <circle cx="612" cy="62" r="1.1"/>
+    <circle cx="742" cy="42" r="0.8"/>
+    <circle cx="884" cy="26" r="1.2"/>
+    <circle cx="1042" cy="58" r="0.9"/>
+    <circle cx="66" cy="236" r="0.9"/>
+    <circle cx="1006" cy="212" r="1.0"/>
+    <circle cx="70" cy="392" r="1.2"/>
+    <circle cx="1074" cy="430" r="0.8"/>
+    <circle cx="118" cy="566" r="0.9"/>
+    <circle cx="940" cy="644" r="1.1"/>
+    <circle cx="404" cy="656" r="0.9"/>
+    <circle cx="692" cy="664" r="1.0"/>
+  </g>
+
+  <!-- layer 1: App + Platform -->
+  <g>
+    <rect class="panel" x="150" y="60" width="720" height="124" rx="10"/>
+    <rect class="accent" x="150" y="72" width="4" height="100" rx="2"/>
+    <text class="layer" x="182" y="100">Sources/App + Sources/Platform</text>
+    <text class="what" x="182" y="128">AppKit · MetalKit · Core Audio — window, input, 60 Hz driver</text>
+    <text class="members" x="182" y="160">SIGameView, SIAppDelegate, AudioEngine</text>
+  </g>
+
+  <!-- layer 2: Render -->
+  <g>
+    <rect class="panel" x="150" y="290" width="720" height="124" rx="10"/>
+    <rect class="accent" x="150" y="302" width="4" height="100" rx="2"/>
+    <text class="layer" x="182" y="330">Sources/Render</text>
+    <text class="what" x="182" y="358">Portable C++ scene composition + the Objective-C++ Metal boundary</text>
+    <text class="members" x="182" y="390">Scene, Canvas, PixelFont, SIRenderer</text>
+  </g>
+
+  <!-- layer 3: Core -->
+  <g>
+    <rect class="panel" x="150" y="520" width="720" height="124" rx="10"/>
+    <rect class="accent" x="150" y="532" width="4" height="100" rx="2"/>
+    <text class="layer" x="182" y="560">Sources/Core</text>
+    <text class="what" x="182" y="588">Portable C++23 simulation — no AppKit, Metal, or audio imports</text>
+    <text class="members" x="182" y="620">Game, Bunker, SplitMix64, Types</text>
+  </g>
+
+  <!-- read-only flow: Core -> Render -->
+  <line class="flow" x1="300" y1="520" x2="300" y2="414" marker-end="url(#arrow-mint)"/>
+  <text class="flowLabel" x="330" y="452">read-only API</text>
+  <text class="flowNote" x="330" y="474">const Game&amp; · getters · spans · drained events</text>
+
+  <!-- read-only flow: Render -> App -->
+  <line class="flow" x1="300" y1="290" x2="300" y2="184" marker-end="url(#arrow-mint)"/>
+  <text class="flowLabel" x="330" y="222">immutable state + events</text>
+  <text class="flowNote" x="330" y="244">Scene::build(const Game&amp;) → vertex data</text>
+
+  <!-- command channel: App -> Core, routed outside the layer stack -->
+  <path class="cmd" d="M 870 122 H 1060 Q 1080 122 1080 142 V 562 Q 1080 582 1060 582 H 878"
+        marker-end="url(#arrow-magenta)"/>
+  <text class="cmdLabel" x="884" y="152">commands</text>
+  <text class="cmdNote" x="884" y="174">input · start · pause</text>
+  <text class="cmdNote" x="884" y="192">update(1/60)</text>
+</svg>

@@ -25,25 +25,13 @@ The project had five engineering constraints:
 Those constraints point to a layered design rather than a monolithic "game
 class" that owns the window, renderer, audio device, and rules together.
 
-```text
-┌─────────────────────────────────────────────────────────────┐
-│ Sources/App + Sources/Platform   AppKit, MetalKit, Core Audio│
-│   SIGameView, SIAppDelegate, AudioEngine                    │
-└───────────────▲───────────────────────────────▲─────────────┘
-                │ immutable state/events        │ commands
-┌───────────────┴───────────────────────────────┴─────────────┐
-│ Sources/Render      pure C++ scene + MetalRenderer.mm        │
-│   Scene, Canvas, PixelFont, SIRenderer                      │
-└───────────────▲─────────────────────────────────────────────┘
-                │ read-only API
-┌───────────────┴─────────────────────────────────────────────┐
-│ Sources/Core        portable C++23 simulation                │
-│   Game, Bunker, SplitMix64, Types                            │
-└─────────────────────────────────────────────────────────────┘
-```
+![Layered architecture: App and Platform on top, Render in the middle, Core at the bottom; read-only state and events flow upward, commands flow down the right-hand channel](architecture.svg)
 
-The only upward arrows are read-only state and a command/event interface. The
-core has no reference to the layers above it.
+Edges are one-way in source terms. State, events, and vertex data move upward
+through const references and `std::span` views; commands move down the
+right-hand channel into `Game`. Nothing in `Sources/Core/` includes a header
+from `Sources/Render/`, `Sources/Platform/`, or `Sources/App/`, so the
+dependency graph and the arrowheads agree.
 
 ## 2. The simulation API is command-oriented and read-only
 
