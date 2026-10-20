@@ -48,11 +48,12 @@ third-party library is used by the game.
 | Space | Fire / start a new game |
 | Return | Start a new game |
 | P | Pause / resume |
-| Esc | Pause |
+| Esc | Exit full screen when full screen; otherwise pause |
 | M | Mute / unmute |
+| F | Toggle full screen |
 | ⌘N | New game |
 | ⌘P / ⌘M | Pause / mute menu shortcuts |
-| ⌃⌘F | Toggle full screen |
+| ⌃⌘F | Toggle full screen menu shortcut |
 
 The window is resizable and preserves the arcade board's portrait aspect ratio.
 Sound can be muted at any time, and both the mute setting and the local high

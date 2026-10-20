@@ -13,7 +13,8 @@ accumulates wall-clock time and feeds the simulation exact 1/60 second updates.
 - Space to "start" on attract/game-over screens or `setFiring(true)` in play;
 - Return to "start" on attract/game-over;
 - P to `togglePause`;
-- Escape to `pause`; and
+- F to toggle full screen;
+- Escape to exit full screen when full screen, otherwise to `pause`; and
 - M to the persisted mute toggle.
 
 `keyUp` releases held movement and firing. `Make First Responder` is set when

@@ -248,8 +248,19 @@ void playEventSound(invaders::platform::AudioEngine& audio, const invaders::Even
     case 35: // P
         _game->togglePause();
         break;
+    case 3: // F
+        if (!event.isARepeat) {
+            [self.window toggleFullScreen:nil];
+        }
+        break;
     case 53: // Escape
-        _game->pause();
+        if (!event.isARepeat) {
+            if ((self.window.styleMask & NSWindowStyleMaskFullScreen) != 0) {
+                [self.window toggleFullScreen:nil];
+            } else {
+                _game->pause();
+            }
+        }
         break;
     case 46: // M
         [self toggleMute];
