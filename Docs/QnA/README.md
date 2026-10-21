@@ -8,6 +8,7 @@ Newest first:
 
 | Question | Updated |
 | --- | --- |
+| [Why do transitive includes matter, and how does this build catch them?](transitive-includes.md) | 2026-10-21 |
 | [What is "the arcade's raster order"?](raster-order.md) | 2026-10-21 |
 | [Why is this renderer "CPU-dominant" rather than GPU-driven?](cpu-dominant-renderer.md) | 2026-10-21 |
 | [What does "a centralized two-stage pipeline with a 3-slot back-pressure ring, not a task graph" mean?](frame-pipeline-and-back-pressure.md) | 2026-10-21 |
