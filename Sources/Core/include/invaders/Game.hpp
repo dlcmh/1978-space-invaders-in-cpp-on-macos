@@ -5,7 +5,7 @@
 #include "invaders/Types.hpp"
 
 #include <array>
-#include <cstdint>
+#include <cstddef>
 #include <optional>
 #include <span>
 #include <vector>
