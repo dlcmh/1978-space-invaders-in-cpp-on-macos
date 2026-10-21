@@ -8,6 +8,8 @@ Newest first:
 
 | Question | Updated |
 | --- | --- |
+| [Why is this renderer "CPU-dominant" rather than GPU-driven?](cpu-dominant-renderer.md) | 2026-10-21 |
+| [What does "a centralized two-stage pipeline with a 3-slot back-pressure ring, not a task graph" mean?](frame-pipeline-and-back-pressure.md) | 2026-10-21 |
 | [Why do headers exist, and why are `.hpp`/`.cpp` or `.h`/`.mm` paired?](headers-and-source-pairs.md) | 2026-10-20 |
 | [What is a `.hpp` file?](hpp-files.md) | 2026-10-20 |
 | [Why is a SplitMix64 implementation needed?](splitmix64.md) | 2026-10-20 |
