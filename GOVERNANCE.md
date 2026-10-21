@@ -93,6 +93,30 @@ Generated binaries are not committed to source control. Distribution artifacts
 are produced through `make app` and `make dmg` and published only when the
 maintainer authorizes a release.
 
+## Agent commit and push authority
+
+The maintainer has pre-authorized repository agents to commit and push normal
+maintenance and documentation work to `origin/main` without a separate request
+for each change. Completing a task includes landing it: an agent runs the
+quality gates, commits with a Conventional Commit message, and pushes.
+
+The limits of that authority:
+
+- The quality gates must pass first. A failing `make check` is reported, not
+  committed around silently.
+- Agents stage explicit paths, and never commit generated artifacts, build
+  products, DMGs, or secrets.
+- Force-pushing, rewriting published history, and changing remotes remain
+  prohibited.
+- Dependent, unrelated, or maintainer-approval work does not become authorized
+  merely because an agent can push. Agents still stop for the cases listed in
+  [AGENTS.md](AGENTS.md#when-to-stop-and-ask-the-maintainer): licensing,
+  dependencies and network access, incompatible gameplay or scoring changes,
+  releases and tags, history rewrites, and large optional scope.
+
+The operating procedure lives in
+[AGENTS.md](AGENTS.md#committing-and-pushing-are-the-default).
+
 ## Releases
 
 Release versions follow semantic versioning for the application and its public
@@ -144,13 +168,20 @@ local high score and mute preference are stored. Security handling is defined in
 - `main` tracks `origin/main`.
 - Force-pushing, rewriting published history, changing the canonical remote, or
   adding another release remote requires maintainer approval.
-- Agents follow the commit and push rules in [AGENTS.md](AGENTS.md).
+- Agents follow the commit and push rules in [AGENTS.md](AGENTS.md); ordinary
+  commits and pushes are pre-authorized under
+  [Agent commit and push authority](#agent-commit-and-push-authority).
 
 ## Amendments
 
 Governance changes are proposed as a pull request or explicit maintainer
 instruction and require maintainer approval. The change should state why the
 current rule is insufficient, what replaces it, and any migration impact.
+
+| Date | Change | Authority |
+| --- | --- | --- |
+| 2026-10-20 | Initial governance baseline for version 1.0. | Maintainer |
+| 2026-10-21 | Committing and pushing ordinary maintenance work became the agent default rather than a per-change authorization. Reason: the earlier rule, "push when authorized", was ambiguous and led agents to hand back finished, verified work and wait. Replaced by [Agent commit and push authority](#agent-commit-and-push-authority); the protected operations listed in [AGENTS.md](AGENTS.md#when-to-stop-and-ask-the-maintainer) still require approval. Migration impact: none — no history was rewritten, and the policy only widens agent authority for ordinary work. | Maintainer instruction |
 
 The **Original request** quotation in
 [Docs/PROJECT_ORIGIN.md](Docs/PROJECT_ORIGIN.md) is immutable. Historical

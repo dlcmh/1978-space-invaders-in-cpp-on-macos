@@ -143,6 +143,9 @@ symbols. `make docs-impact` lists documentation that references changed files.
 
 Allowed direct pushes by repository agents are defined in `AGENTS.md`. Human
 contributors should use pull requests unless the maintainer says otherwise.
+Repository agents commit and push ordinary maintenance work by default after
+`make check` passes; see
+[AGENTS.md](AGENTS.md#committing-and-pushing-are-the-default).
 
 ## Reporting bugs
 
