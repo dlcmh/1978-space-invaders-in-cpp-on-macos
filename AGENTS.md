@@ -138,7 +138,9 @@ gate every change must pass:
 2. a Release build with `-Werror` and the project warning set, which also
    compiles each portable header as a standalone translation unit;
 3. `spaceinvaders_checks` — behavior; and
-4. `python3 scripts/check_docs.py` — documentation integrity.
+4. `python3 scripts/check_docs.py` — documentation integrity. This includes the
+   QnA registry rule: every document in `Docs/QnA/` must appear in
+   [Docs/QnA/README.md](Docs/QnA/README.md) as a dated table row.
 
 The format style lives in [`.clang-format`](.clang-format). It is close to LLVM
 with four-space indentation, 100 columns, attached braces, and left-aligned
@@ -217,6 +219,41 @@ rewriting it. A single line can opt out of the symbol rule with
   Distribution binaries belong in a release artifact, not source history.
 - Do not tag or publish a GitHub Release unless the maintainer asks.
 
+### Committing and pushing are the default
+
+Committing and pushing are **not** separate approvals to request: the maintainer
+has pre-authorized them for normal maintenance and documentation work in this
+repository. When an agent completes a task, it finishes the task — it runs the
+gates, commits, and pushes without waiting to be asked. "Left uncommitted" is a
+report of failure, not a neutral outcome.
+
+The default step, after every gate passes:
+
+```bash
+make check
+git fetch origin && git status -sb   # confirm main is not behind origin/main
+git add <specific paths>             # never `git add -A` or `git add .`
+python3 scripts/check_docs.py --statuses
+git commit -m "<type>: <summary>"
+git push origin main
+```
+
+- **Commit only what belongs.** Stage explicit paths. Before committing, confirm
+  with `--statuses` that nothing generated, binary, or secret is staged, and
+  that unrelated local work is not swept into the commit.
+- **One concern per commit.** If a change spans documentation and a script
+  change that supports it, they may share a commit when a reviewer would read
+  them together. Split otherwise.
+- **Freshness before pushing.** Fetch first. If `main` is behind, integrate with
+  a merge or rebase before pushing; never force-push.
+- **Report the result.** State the commit SHA and whether the push succeeded. If
+  the push is rejected for permissions or network reasons, say so plainly and
+  keep the commit local rather than claiming it landed.
+
+Exceptions that still require the maintainer: every item under [When to stop
+and ask the maintainer](#when-to-stop-and-ask-the-maintainer), plus a failing
+gate. Never commit on top of a red `make check` to "fix later" without saying so.
+
 ## Rendering and audio guidance
 
 - Keep the presentation in the **224 × 256 logical portrait space** and
@@ -264,8 +301,9 @@ in [SECURITY.md](SECURITY.md).
 6. Update README/governance docs when behavior, controls, build steps, or
    policy changes, then run `make docs-check` and resolve the docs listed by
    `make docs-impact`.
-7. Commit with a Conventional Commit message and push to `origin/main` when
-   authorized.
+7. Commit with a Conventional Commit message and push to `origin/main`. This is
+   the default completion step, not a separate request; see
+   [Committing and pushing are the default](#committing-and-pushing-are-the-default).
 8. Report what changed, what was verified, and any remaining risks or follow-up
    work.
 
@@ -283,7 +321,8 @@ a verification step, say exactly what was blocked.
 - [ ] Gameplay/controls documentation is current.
 - [ ] Governance and origin records remain accurate.
 - [ ] No generated binaries, build products, DMGs, or secrets are staged.
-- [ ] Change is committed and pushed, if authorized.
+- [ ] Change is committed and pushed to `origin/main`, unless the work requires
+      maintainer approval first.
 
 ## When to stop and ask the maintainer
 

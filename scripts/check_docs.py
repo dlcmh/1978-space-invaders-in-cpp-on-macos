@@ -12,11 +12,14 @@ Rules
 3. A Markdown heading fragment must match a real heading.
 4. A link into C++/Objective-C++/script source must be followed by an
    inline-code symbol that occurs in the linked file.
+5. Every QnA document is registered in ``Docs/QnA/README.md`` with a date, and
+   every registered entry resolves to a real document.
 
 Usage:
     python3 scripts/check_docs.py
     python3 scripts/check_docs.py --changed
     python3 scripts/check_docs.py --changed --base origin/main
+    python3 scripts/check_docs.py --statuses
 
 Standard library only; no third-party dependencies.
 """
@@ -40,6 +43,13 @@ LINK_RE = re.compile(r"(?<!!)\[([^\]]*)\]\(([^)\s]+)\)")
 INLINE_CODE_RE = re.compile(r"`([^`]+)`")
 LIST_OR_HEADING_RE = re.compile(r"^\s*(#{1,6}\s|[-*+]\s|\d+\.\s|\||```)")
 DECL_RE = re.compile(r"^\s*(?:class|struct|enum|namespace|void|int|auto|float|bool)\s+([A-Za-z_][A-Za-z0-9_:]*)")
+
+# The QnA index is a registry: every question document must be listed there, and
+# every entry must be dated. Entry shape:
+#     | [Question text](file.md) | YYYY-MM-DD |
+QNA_DIR = "Docs/QnA"
+QNA_INDEX = "Docs/QnA/README.md"
+QNA_ENTRY_RE = re.compile(r"^\|\s*\[[^\]]+\]\(([^)\s]+)\)\s*\|\s*(\d{4}-\d{2}-\d{2})\s*\|\s*$")
 
 
 class Doc:
@@ -138,6 +148,45 @@ def symbol_in_file(symbol: str, path: str) -> bool:
     except OSError:
         return False
     return re.search(rf"\b{re.escape(symbol)}\b", text) is not None
+
+
+def validate_qna_registry() -> list[str]:
+    """Every QnA document must appear in the index with a date, and vice versa."""
+    if QNA_INDEX not in {doc.path for doc in repo_docs()}:
+        return [f"{QNA_INDEX} does not exist"]
+    index = Doc(QNA_INDEX)
+    errors: list[str] = []
+    registered: set[str] = set()
+    for number, line in enumerate(index.lines, start=1):
+        if not line.lstrip().startswith("|"):
+            continue
+        if "](http" in line or "---" in line or "(" not in line:
+            # Foreign links and the table header are not QnA entries.
+            continue
+        match = QNA_ENTRY_RE.match(line.rstrip())
+        if match is None:
+            errors.append(
+                f"{QNA_INDEX}:{number}: malformed QnA entry; expected "
+                "'| [Question](file.md) | YYYY-MM-DD |'"
+            )
+            continue
+        target, _ = match.group(1), match.group(2)
+        if target.startswith(("http://", "https://", "#")):
+            continue
+        resolved = os.path.normpath(os.path.join(QNA_DIR, target))
+        if resolved == QNA_INDEX:
+            continue
+        registered.add(resolved)
+
+    for doc in repo_docs():
+        if not doc.path.startswith(QNA_DIR + "/") or doc.path == QNA_INDEX:
+            continue
+        if doc.path not in registered:
+            errors.append(
+                f"{doc.path}: not registered in {QNA_INDEX}; add a dated table row "
+                "so the QnA index stays complete"
+            )
+    return errors
 
 
 def validate() -> tuple[list[str], dict[str, list[tuple[str, str]]]]:
@@ -261,13 +310,44 @@ def report_changed(base: str, references: dict[str, list[tuple[str, str]]]) -> N
         print("\nRe-read the docs above before committing.")
 
 
+def report_statuses() -> None:
+    """Print the working-tree status of every tracked and untracked file.
+
+    Agents use this to decide whether to commit and push, and to catch staged
+    build products, secrets, or other generated artifacts before committing.
+    """
+    status = git("status", "--porcelain")
+    entries = [line for line in status.splitlines() if line.strip()]
+    if not entries:
+        print("Working tree clean: nothing to commit.")
+        return
+    print("Working-tree status:")
+    for line in entries:
+        print(f"  {line}")
+    staged = [line for line in entries if line[:2].strip() and line[0] not in " ?"]
+    if staged:
+        print("\nStaged changes present: commit them once all gates pass.")
+    else:
+        print("\nNothing is staged (changes may be untracked or unstaged).")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--changed", action="store_true")
     parser.add_argument("--base", default="HEAD")
+    parser.add_argument(
+        "--statuses",
+        action="store_true",
+        help="print git status --porcelain, for the commit-and-push decision",
+    )
     args = parser.parse_args()
 
+    if args.statuses:
+        report_statuses()
+        print()
+
     errors, references = validate()
+    errors += validate_qna_registry()
     if errors:
         for error in errors:
             print(f"ERROR {error}")
